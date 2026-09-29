@@ -34,12 +34,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       StatusBadge(label: 'Aktif', textColor: AppColors.success, bgColor: AppColors.successBg),
                       const SizedBox(height: 4),
-                      const Text(MockData.driverName, style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
-                      const Row(
+                      Text(MockData.driverName, style: Theme.of(context).textTheme.titleLarge),
+                      Row(
                         children: [
-                          Icon(Icons.star, size: 14, color: AppColors.star),
-                          SizedBox(width: 2),
-                          Text('4.8 (128 ulasan)', style: TextStyle(fontSize: 12, color: AppColors.neutral600)),
+                          const Icon(Icons.star, size: 14, color: AppColors.star),
+                          const SizedBox(width: 2),
+                          Text('4.8 (128 ulasan)', style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),
                     ],
@@ -106,17 +106,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Form Ubah Data ditunda (keputusan slicing)')),
-                  );
-                },
+                onPressed: null,
                 child: const Text('Ubah Data'),
               ),
             ),
             const SizedBox(height: 6),
-            const Text('PRD: tombol Hubungi tidak dipakai. Rating/total trip/kendaraan read-only.',
-              style: TextStyle(fontSize: 11, color: AppColors.neutral400), textAlign: TextAlign.center),
+            const Text('Perubahan rating, total trip, dan kendaraan ditugaskan mengikuti sistem.',
+              style: TextStyle(fontSize: 11, color: AppColors.neutral600), textAlign: TextAlign.center),
           ],
         ),
       ),
@@ -145,8 +141,11 @@ class _ContactCell extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(label, style: const TextStyle(fontSize: 10, color: AppColors.neutral600)),
-                Text(value, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
+                Text(label, style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                Tooltip(
+                  message: value,
+                  child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis),
+                ),
               ],
             ),
           ),
@@ -200,7 +199,10 @@ class _TripHistory extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(route, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
-                Text('$date • $vehicle', style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                Tooltip(
+                  message: '$date • $vehicle',
+                  child: Text('$date • $vehicle', style: const TextStyle(fontSize: 12, color: AppColors.neutral600), maxLines: 2, overflow: TextOverflow.ellipsis),
+                ),
               ],
             ),
           ),

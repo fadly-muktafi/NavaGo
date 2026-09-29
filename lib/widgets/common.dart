@@ -10,10 +10,13 @@ class StatusBadge extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final style = Theme.of(context).textTheme.labelSmall?.copyWith(
+      fontWeight: FontWeight.w600, color: textColor,
+    );
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(color: bgColor, borderRadius: BorderRadius.circular(999)),
-      child: Text(label, style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: textColor)),
+      child: Text(label, style: style),
     );
   }
 }
@@ -43,6 +46,7 @@ class NavagoSearch extends StatelessWidget {
       onChanged: onChanged,
       decoration: InputDecoration(
         hintText: hint,
+        labelText: hint,
         prefixIcon: const Icon(Icons.search, size: 20),
       ),
     );
@@ -58,7 +62,7 @@ class FilterChips extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 36,
+      height: 44,
       child: ListView.separated(
         scrollDirection: Axis.horizontal,
         itemCount: labels.length,
@@ -77,7 +81,8 @@ class FilterChips extends StatelessWidget {
             selectedColor: AppColors.primary600,
             side: BorderSide.none,
             shape: const StadiumBorder(),
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+            labelPadding: const EdgeInsets.symmetric(horizontal: 4),
           );
         },
       ),
@@ -96,6 +101,7 @@ class KpiCard extends StatelessWidget {
   const KpiCard({super.key, required this.icon, required this.iconColor, required this.iconBg, required this.label, required this.value, this.valueColor});
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -117,9 +123,9 @@ class KpiCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text(label, style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                Text(label, style: textTheme.labelSmall),
                 const SizedBox(height: 2),
-                Text(value, style: TextStyle(fontSize: 22, fontWeight: FontWeight.w800, color: valueColor ?? AppColors.neutral900)),
+                Text(value, style: textTheme.displayLarge?.copyWith(fontSize: 22, color: valueColor ?? AppColors.neutral900)),
               ],
             ),
           ),
@@ -146,6 +152,7 @@ class VehicleListItem extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(12),
@@ -171,18 +178,18 @@ class VehicleListItem extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Expanded(child: Text(plat, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700))),
+                      Expanded(child: Text(plat, style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700))),
                       StatusBadge(label: statusLabel, textColor: statusFg, bgColor: statusBg),
                     ],
                   ),
                   const SizedBox(height: 2),
-                  Text('$tipe • $kapasitas', style: const TextStyle(fontSize: 12, color: AppColors.neutral600)),
+                  Text('$tipe • $kapasitas', style: textTheme.bodySmall),
                   const SizedBox(height: 2),
                   Row(
                     children: [
                       const Icon(Icons.location_on_outlined, size: 13, color: AppColors.neutral400),
                       const SizedBox(width: 2),
-                      Text(lokasi, style: const TextStyle(fontSize: 12, color: AppColors.neutral600)),
+                      Expanded(child: Text(lokasi, style: textTheme.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis)),
                     ],
                   ),
                 ],
@@ -211,6 +218,7 @@ class MaintenanceListItem extends StatelessWidget {
   });
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -230,15 +238,15 @@ class MaintenanceListItem extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(judul, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
-                Text(subjudul, style: const TextStyle(fontSize: 12, color: AppColors.neutral600)),
+                Text(judul, style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+                Text(subjudul, style: textTheme.bodySmall, maxLines: 1, overflow: TextOverflow.ellipsis),
               ],
             ),
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(tanggal, style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+              Text(tanggal, style: textTheme.labelSmall),
               const SizedBox(height: 4),
               DueBadge(label: sisa),
             ],
@@ -253,16 +261,18 @@ class MaintenanceListItem extends StatelessWidget {
 class SectionHeader extends StatelessWidget {
   final String title;
   final VoidCallback? onSeeAll;
-  const SectionHeader({super.key, required this.title, this.onSeeAll});
+  final String? seeAllLabel;
+  const SectionHeader({super.key, required this.title, this.onSeeAll, this.seeAllLabel});
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        Expanded(child: Text(title, style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700))),
+        Expanded(child: Text(title, style: Theme.of(context).textTheme.titleMedium)),
         if (onSeeAll != null)
           TextButton(
             onPressed: onSeeAll,
-            child: const Text('Lihat Semua', style: TextStyle(color: AppColors.primary500, fontSize: 12)),
+            child: Text(seeAllLabel ?? 'Lihat semua $title',
+              style: const TextStyle(color: AppColors.primary500, fontSize: 12)),
           ),
       ],
     );
@@ -275,6 +285,7 @@ class TripStepper extends StatelessWidget {
   const TripStepper({super.key, this.current = 0});
   @override
   Widget build(BuildContext context) {
+    final labelStyle = Theme.of(context).textTheme.labelSmall?.copyWith(fontWeight: FontWeight.w600);
     const labels = ['Detail Trip', 'Konfirmasi'];
     return Row(
       children: List.generate(2, (i) {
@@ -291,7 +302,7 @@ class TripStepper extends StatelessWidget {
                 child: Text('${i + 1}', style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w700)),
               ),
               const SizedBox(width: 6),
-              Text(labels[i], style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: textColor)),
+              Text(labels[i], style: labelStyle?.copyWith(color: textColor)),
               if (i == 0) Expanded(child: Container(height: 2, margin: const EdgeInsets.symmetric(horizontal: 8), color: color)),
             ],
           ),
@@ -306,10 +317,13 @@ class MapPlaceholder extends StatelessWidget {
   const MapPlaceholder({super.key});
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return Semantics(
+      image: true,
+      label: 'Peta rute Jakarta ke Bandung, status live. Kendaraan B 1234 KLM 70 kilometer per jam menuju Bandung.',
+      child: Container(
       height: 220,
       decoration: BoxDecoration(
-        color: const Color(0xFFF0F5F1),
+        color: AppColors.neutral100,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppColors.neutral200),
       ),
@@ -352,6 +366,7 @@ class MapPlaceholder extends StatelessWidget {
           ),
         ],
       ),
+      ),
     );
   }
 }
@@ -363,15 +378,17 @@ class _MapPin extends StatelessWidget {
   const _MapPin({required this.icon, required this.label, required this.color});
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 34, height: 34,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2)),
-          child: Icon(icon, color: Colors.white, size: 18),
-        ),
-        Text(label, style: const TextStyle(fontSize: 10, fontWeight: FontWeight.w600)),
-      ],
+    return ExcludeSemantics(
+      child: Column(
+        children: [
+          Container(
+            width: 34, height: 34,
+            decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all(color: Colors.white, width: 2)),
+            child: Icon(icon, color: Colors.white, size: 18),
+          ),
+          Text(label, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
+        ],
+      ),
     );
   }
 }
@@ -380,7 +397,7 @@ class _RoutePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = const Color(0xFF2F80ED)
+      ..color = AppColors.info
       ..strokeWidth = 3
       ..style = PaintingStyle.stroke;
     final path = Path()

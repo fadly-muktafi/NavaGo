@@ -30,19 +30,28 @@ class NavagoBottomNav extends StatelessWidget {
               final active = i == currentIndex;
               final color = active ? AppColors.primary600 : AppColors.neutral400;
               return Expanded(
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () => onTap(i),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(active ? items[i].$2 : items[i].$1, color: color, size: 24),
-                        const SizedBox(height: 2),
-                        Text(items[i].$3,
-                          style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color)),
-                      ],
+                child: Semantics(
+                  selected: active,
+                  button: true,
+                  label: items[i].$3,
+                  child: Material(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(12),
+                    child: InkWell(
+                      borderRadius: BorderRadius.circular(12),
+                      onTap: () => onTap(i),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(active ? items[i].$2 : items[i].$1, color: color, size: 24),
+                            const SizedBox(height: 2),
+                            Text(items[i].$3,
+                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color)),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                 ),

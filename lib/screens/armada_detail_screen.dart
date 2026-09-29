@@ -38,31 +38,35 @@ class _ArmadaDetailScreenState extends State<ArmadaDetailScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Foto hero placeholder
-            Container(
-              height: 190,
-              decoration: BoxDecoration(color: AppColors.neutral100, borderRadius: BorderRadius.circular(16)),
-              child: Stack(
-                children: [
-                  const Center(child: Icon(Icons.directions_bus, size: 64, color: AppColors.neutral400)),
-                  Positioned(
-                    right: 10, bottom: 10,
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: Colors.black54, borderRadius: BorderRadius.circular(8)),
-                      child: const Text('1/5', style: TextStyle(color: Colors.white, fontSize: 11)),
+            Semantics(
+              image: true,
+              label: 'Foto armada Toyota Hiace B 1234 KLM',
+              child: Container(
+                height: 190,
+                decoration: BoxDecoration(color: AppColors.neutral100, borderRadius: BorderRadius.circular(16)),
+                child: Stack(
+                  children: [
+                    const Center(child: Icon(Icons.directions_bus, size: 64, color: AppColors.neutral400)),
+                    Positioned(
+                      right: 10, bottom: 10,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(color: AppColors.neutral900.withOpacity(0.65), borderRadius: BorderRadius.circular(8)),
+                        child: const Text('1/5', style: TextStyle(color: Colors.white, fontSize: 11)),
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 12),
             Row(
               children: [
-                Expanded(child: Text(v.plat, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w800))),
+                Expanded(child: Text(v.plat, style: Theme.of(context).textTheme.displayLarge?.copyWith(fontSize: 20))),
                 StatusBadge(label: v.status.label, textColor: v.status.textColor, bgColor: v.status.bgColor),
               ],
             ),
-            Text('${v.tipe} Commuter', style: const TextStyle(fontSize: 13, color: AppColors.neutral600)),
+            Text('${v.tipe} Commuter', style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 8),
             const Wrap(
               spacing: 8,
@@ -80,42 +84,42 @@ class _ArmadaDetailScreenState extends State<ArmadaDetailScreen> {
                 color: Colors.white, borderRadius: BorderRadius.circular(12),
                 border: Border.all(color: AppColors.neutral200),
               ),
-              child: GridView.count(
-                crossAxisCount: 2,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                childAspectRatio: 2.4,
-                children: const [
-                  _InfoCell(icon: Icons.location_on_outlined, label: 'Lokasi Saat Ini', value: 'Jakarta Pusat'),
-                  _InfoCell(icon: Icons.payments_outlined, label: 'Tarif Sewa', value: 'Rp 1.200.000 / hari'),
-                  _InfoCell(icon: Icons.speed_outlined, label: 'Kilometer', value: '125.430 km'),
-                  _InfoCell(icon: Icons.calendar_today_outlined, label: 'Tahun', value: '2020'),
-                ],
+              child: LayoutBuilder(
+                builder: (context, constraints) {
+                  final narrow = constraints.maxWidth < 300;
+                  return GridView.count(
+                    crossAxisCount: narrow ? 1 : 2,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    childAspectRatio: narrow ? 4.5 : 2.4,
+                    children: const [
+                      _InfoCell(icon: Icons.location_on_outlined, label: 'Lokasi saat ini', value: 'Jakarta Pusat'),
+                      _InfoCell(icon: Icons.payments_outlined, label: 'Tarif sewa', value: 'Rp 1.200.000 / hari'),
+                      _InfoCell(icon: Icons.speed_outlined, label: 'Kilometer', value: '125.430 km'),
+                      _InfoCell(icon: Icons.calendar_today_outlined, label: 'Tahun', value: '2020'),
+                    ],
+                  );
+                },
               ),
             ),
             const SizedBox(height: 12),
-            const Text('Deskripsi', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700)),
+            Text('Deskripsi', style: Theme.of(context).textTheme.titleMedium),
             const SizedBox(height: 4),
-            const Text('Toyota Hiace Commuter, kondisi prima, cocok untuk perjalanan dalam kota maupun luar kota.',
-              style: TextStyle(fontSize: 13, color: AppColors.neutral600)),
+            Text('Toyota Hiace Commuter, kondisi prima, cocok untuk perjalanan dalam kota maupun luar kota.',
+              style: Theme.of(context).textTheme.bodySmall),
             const SizedBox(height: 12),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Form Ajukan Maintenance ditunda (keputusan slicing)')),
-                  );
-                },
+                onPressed: null,
                 child: const Text('Ajukan Maintenance'),
               ),
             ),
             const SizedBox(height: 20),
             // Section Maintenance (PRD: bagian dari Detail, tanpa kalender)
-            const Text('Maintenance Kendaraan Ini', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800)),
+            Text('Maintenance kendaraan ini', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 4),
-            const Text('Jadwal & pengajuan per kendaraan. Kalender mingguan tidak dipakai (PRD).',
-              style: TextStyle(fontSize: 11, color: AppColors.neutral400)),
+            // PRD: jadwal per kendaraan, tanpa kalender mingguan (catatan dev).
             const SizedBox(height: 10),
             FilterChips(labels: cats, selected: catFilter, onSelected: (i) => setState(() => catFilter = i)),
             const SizedBox(height: 10),
@@ -172,8 +176,11 @@ class _InfoCell extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(label, style: const TextStyle(fontSize: 10, color: AppColors.neutral600)),
-              Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700), maxLines: 1, overflow: TextOverflow.ellipsis),
+              Text(label, style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+              Tooltip(
+                message: value,
+                child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis),
+              ),
             ],
           ),
         ),

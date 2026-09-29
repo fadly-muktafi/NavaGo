@@ -43,8 +43,8 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
           children: [
             Row(
               children: [
-                const Expanded(child: Text('Daftar Armada', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800))),
-                Text('${MockData.vehicles.length} Armada', style: const TextStyle(fontSize: 12, color: Colors.grey)),
+                Expanded(child: Text('Daftar armada', style: Theme.of(context).textTheme.titleLarge)),
+                Text('${MockData.vehicles.length} armada', style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
             const SizedBox(height: 10),
@@ -54,7 +54,27 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
             const SizedBox(height: 10),
             Expanded(
               child: list.isEmpty
-                  ? const Center(child: Text('Belum ada armada yang cocok.'))
+                  ? Center(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            query.isEmpty
+                                ? 'Belum ada armada pada filter ini.'
+                                : 'Tidak ada hasil untuk "$query".',
+                            textAlign: TextAlign.center,
+                          ),
+                          const SizedBox(height: 8),
+                          TextButton(
+                            onPressed: () => setState(() {
+                              filter = 0;
+                              query = '';
+                            }),
+                            child: const Text('Hapus filter'),
+                          ),
+                        ],
+                      ),
+                    )
                   : ListView.separated(
                       padding: const EdgeInsets.only(bottom: 16),
                       itemCount: list.length,

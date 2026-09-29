@@ -18,9 +18,10 @@ abstract class AppColors {
   static const neutral100 = Color(0xFFF3F5F8);
   static const white = Color(0xFFFFFFFF);
 
-  // Semantic text
-  static const success = Color(0xFF0B8F76);
-  static const successBg = Color(0xFFDDF4EC);
+  // Semantic text — success memakai hue berbeda dari primary interaktif
+  // agar "bisa diklik" vs "selesai" terbaca sekilas (satu warna satu makna).
+  static const success = Color(0xFF178A4C);
+  static const successBg = Color(0xFFDDF0E3);
   static const info = Color(0xFF2F80ED);
   static const infoBg = Color(0xFFE3EEFD);
   static const danger = Color(0xFFE5484D);

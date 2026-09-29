@@ -17,7 +17,7 @@ class PenugasanScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Penugasan Driver & Kendaraan', style: TextStyle(fontSize: 17, fontWeight: FontWeight.w800)),
+            Text('Penugasan driver & kendaraan', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 10),
             const TripStepper(current: 0),
             const SizedBox(height: 14),
@@ -27,12 +27,12 @@ class PenugasanScreen extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Expanded(child: Text('Informasi Trip', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700))),
+                      Expanded(child: Text('Informasi trip', style: Theme.of(context).textTheme.titleMedium)),
                       StatusBadge(label: 'Reguler', textColor: AppColors.primary600, bgColor: AppColors.primary100),
                     ],
                   ),
                   const SizedBox(height: 4),
-                  const Text('TRP-20240514-001', style: TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                  Text('TRP-20240514-001', style: Theme.of(context).textTheme.labelSmall),
                   const Divider(height: 20),
                   const _TripRow(icon: Icons.location_on_outlined, label: 'Rute', value: 'Jakarta → Bandung'),
                   const _TripRow(icon: Icons.calendar_today_outlined, label: 'Tanggal', value: '15 Mei 2024'),
@@ -46,18 +46,18 @@ class PenugasanScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Driver Ditugaskan', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                  Text('Driver ditugaskan', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       const CircleAvatar(child: Icon(Icons.person)),
                       const SizedBox(width: 10),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(MockData.driverName, style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-                            Text('4.8 (128 ulasan)', style: TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                            Text(MockData.driverName, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+                            Text('4.8 (128 ulasan)', style: Theme.of(context).textTheme.labelSmall),
                           ],
                         ),
                       ),
@@ -65,7 +65,7 @@ class PenugasanScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const Text('Kendaraan Ditugaskan', style: TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                  Text('Kendaraan ditugaskan', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -75,12 +75,12 @@ class PenugasanScreen extends StatelessWidget {
                         child: const Icon(Icons.directions_bus, color: AppColors.neutral400),
                       ),
                       const SizedBox(width: 10),
-                      const Expanded(
+                      Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('B 1234 KLM', style: TextStyle(fontWeight: FontWeight.w700, fontSize: 13)),
-                            Text('Toyota Hiace • 12 Kursi', style: TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                            Text('B 1234 KLM', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700)),
+                            Text('Toyota Hiace • 12 kursi', style: Theme.of(context).textTheme.labelSmall),
                           ],
                         ),
                       ),
@@ -88,8 +88,7 @@ class PenugasanScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 6),
-                  const Text('PRD: driver & kendaraan tampil sebagai info saja (bukan pilihan).',
-                    style: TextStyle(fontSize: 11, color: AppColors.neutral400)),
+                  // PRD: driver & kendaraan tampil sebagai info saja (catatan dev).
                 ],
               ),
             ),
@@ -99,7 +98,7 @@ class PenugasanScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Penugasan dikonfirmasi (mock) • tercatat dengan timestamp')),
+                    const SnackBar(content: Text('Penugasan dikonfirmasi')),
                   );
                 },
                 child: const Row(
@@ -109,8 +108,8 @@ class PenugasanScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 6),
-            const Text('Tidak ada opsi menolak di aplikasi (PRD). Hubungi admin bila berhalangan.',
-              style: TextStyle(fontSize: 11, color: AppColors.neutral400)),
+            Text('Tidak ada opsi menolak di aplikasi. Hubungi admin bila berhalangan.',
+              style: Theme.of(context).textTheme.labelSmall),
           ],
         ),
       ),
@@ -141,11 +140,15 @@ class _TripRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, size: 18, color: AppColors.primary600),
           const SizedBox(width: 8),
-          SizedBox(width: 130, child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.neutral600))),
-          Expanded(child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700))),
+          ConstrainedBox(
+            constraints: const BoxConstraints(minWidth: 96, maxWidth: 140),
+            child: Text(label, style: const TextStyle(fontSize: 12, color: AppColors.neutral600)),
+          ),
+          Expanded(child: Text(value, style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700) ?? const TextStyle(fontSize: 12, fontWeight: FontWeight.w700))),
         ],
       ),
     );

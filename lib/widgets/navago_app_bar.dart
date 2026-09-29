@@ -57,7 +57,7 @@ class NavagoAppBar extends StatelessWidget implements PreferredSizeWidget {
           icon: const Icon(Icons.notifications_none_outlined, color: AppColors.neutral900),
           onPressed: onBellTap ?? () {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Notifikasi (mock): 3 notifikasi baru')),
+              const SnackBar(content: Text('3 notifikasi baru')),
             );
           },
         ),

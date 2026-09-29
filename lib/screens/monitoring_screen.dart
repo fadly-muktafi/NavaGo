@@ -25,16 +25,16 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
           children: [
             Row(
               children: [
-                const Expanded(child: Text('Monitoring Status', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800))),
+                Expanded(child: Text('Monitoring status', style: Theme.of(context).textTheme.titleLarge)),
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(color: AppColors.primary100, borderRadius: BorderRadius.circular(999)),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.circle, size: 8, color: AppColors.primary600),
-                      SizedBox(width: 4),
-                      Text('Live', style: TextStyle(fontSize: 11, fontWeight: FontWeight.w700, color: AppColors.primary600)),
+                      const Icon(Icons.circle, size: 8, color: AppColors.primary600),
+                      const SizedBox(width: 4),
+                      Text('Live', style: Theme.of(context).textTheme.labelSmall?.copyWith(color: AppColors.primary600, fontWeight: FontWeight.w700)),
                     ],
                   ),
                 ),

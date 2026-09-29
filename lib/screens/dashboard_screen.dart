@@ -10,6 +10,7 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
     return Scaffold(
       appBar: const NavagoAppBar(),
       body: SingleChildScrollView(
@@ -19,16 +20,16 @@ class DashboardScreen extends StatelessWidget {
           children: [
             Row(
               children: [
-                const Expanded(
+                Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text('Halo,', style: TextStyle(fontSize: 14, color: AppColors.neutral600)),
-                      Text(MockData.driverName, style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800)),
+                      Text('Halo,', style: textTheme.bodyMedium?.copyWith(color: AppColors.neutral600)),
+                      Text(MockData.driverName, style: textTheme.titleLarge),
                     ],
                   ),
                 ),
-                Text(MockData.greetingDate, style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+                Text(MockData.greetingDate, style: textTheme.labelSmall),
               ],
             ),
             const SizedBox(height: 12),
@@ -42,15 +43,15 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 borderRadius: BorderRadius.circular(16),
               ),
-              child: const Row(
+              child: Row(
                 children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Operasional Hari Ini', style: TextStyle(fontSize: 12, color: AppColors.neutral600)),
+                        Text('Operasional hari ini', style: Theme.of(context).textTheme.bodySmall),
                         SizedBox(height: 2),
-                        Text('Berjalan dengan Baik!', style: TextStyle(fontSize: 15, fontWeight: FontWeight.w800, color: AppColors.navy900)),
+                        Text('Berjalan dengan baik!', style: Theme.of(context).textTheme.titleMedium?.copyWith(color: AppColors.navy900)),
                       ],
                     ),
                   ),
@@ -59,25 +60,29 @@ class DashboardScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 14),
-            GridView.count(
-              crossAxisCount: 2,
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              mainAxisSpacing: 12,
-              crossAxisSpacing: 12,
-              childAspectRatio: 1.65,
-              children: const [
-                KpiCard(icon: Icons.directions_bus, iconColor: AppColors.primary600, iconBg: AppColors.primary100, label: 'Total Armada', value: MockData.kpiTotalArmada),
-                KpiCard(icon: Icons.check_circle_outline, iconColor: AppColors.primary600, iconBg: AppColors.primary100, label: 'Armada Tersedia', value: MockData.kpiTersedia),
-                KpiCard(icon: Icons.directions_car_outlined, iconColor: Colors.orange, iconBg: Color(0xFFFFF1D6), label: 'On Trip', value: MockData.kpiOnTrip),
-                KpiCard(icon: Icons.build_outlined, iconColor: AppColors.danger, iconBg: AppColors.dangerBg, label: 'Maintenance', value: MockData.kpiMaintenance, valueColor: AppColors.danger),
-                KpiCard(icon: Icons.person_outline, iconColor: AppColors.primary600, iconBg: AppColors.primary100, label: 'Driver Aktif', value: MockData.kpiDriverAktif),
-                KpiCard(icon: Icons.description_outlined, iconColor: AppColors.danger, iconBg: AppColors.dangerBg, label: 'Dok. Jatuh Tempo', value: MockData.kpiDokJatuhTempo, valueColor: AppColors.danger),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) {
+                final narrow = constraints.maxWidth < 340;
+                return GridView.count(
+                  crossAxisCount: narrow ? 1 : 2,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: narrow ? 3.2 : 1.65,
+                  children: const [
+                    KpiCard(icon: Icons.directions_bus, iconColor: AppColors.primary600, iconBg: AppColors.primary100, label: 'Total armada', value: MockData.kpiTotalArmada),
+                    KpiCard(icon: Icons.check_circle_outline, iconColor: AppColors.primary600, iconBg: AppColors.primary100, label: 'Armada tersedia', value: MockData.kpiTersedia),
+                    KpiCard(icon: Icons.directions_car_outlined, iconColor: AppColors.warning, iconBg: AppColors.warningBg, label: 'On trip', value: MockData.kpiOnTrip),
+                    KpiCard(icon: Icons.build_outlined, iconColor: AppColors.danger, iconBg: AppColors.dangerBg, label: 'Maintenance', value: MockData.kpiMaintenance, valueColor: AppColors.danger),
+                    KpiCard(icon: Icons.person_outline, iconColor: AppColors.primary600, iconBg: AppColors.primary100, label: 'Driver aktif', value: MockData.kpiDriverAktif),
+                    KpiCard(icon: Icons.description_outlined, iconColor: AppColors.danger, iconBg: AppColors.dangerBg, label: 'Dokumen jatuh tempo', value: MockData.kpiDokJatuhTempo, valueColor: AppColors.danger),
+                  ],
+                );
+              },
             ),
             const SizedBox(height: 8),
-            const Text('PRD: Menu Cepat dihapus. Navigasi via bottom nav.',
-              style: TextStyle(fontSize: 11, color: AppColors.neutral400)),
+            // PRD: Menu Cepat dihapus. Navigasi via bottom nav (catatan dev, tidak dirender).
           ],
         ),
       ),
