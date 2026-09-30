@@ -105,7 +105,11 @@ class _SummaryCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(value, style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w800)),
+              Text(value,
+                style: Theme.of(context).textTheme.displayLarge?.copyWith(
+                  fontSize: 22,
+                  fontFeatures: const [FontFeature.tabularFigures()],
+                )),
               const SizedBox(width: 4),
               Padding(padding: const EdgeInsets.only(bottom: 3), child: Text(total, style: const TextStyle(fontSize: 11, color: AppColors.neutral600))),
             ],

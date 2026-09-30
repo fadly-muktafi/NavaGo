@@ -70,7 +70,7 @@ class FilterChips extends StatelessWidget {
         itemBuilder: (context, i) {
           final active = i == selected;
           return ChoiceChip(
-            label: Text(labels[i]),
+            label: Text(labels[i], softWrap: false, maxLines: 1, overflow: TextOverflow.visible),
             selected: active,
             onSelected: (_) => onSelected(i),
             labelStyle: TextStyle(
@@ -125,7 +125,12 @@ class KpiCard extends StatelessWidget {
               children: [
                 Text(label, style: textTheme.labelSmall),
                 const SizedBox(height: 2),
-                Text(value, style: textTheme.displayLarge?.copyWith(fontSize: 22, color: valueColor ?? AppColors.neutral900)),
+                Text(value,
+                  style: textTheme.displayLarge?.copyWith(
+                    fontSize: 22,
+                    color: valueColor ?? AppColors.neutral900,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  )),
               ],
             ),
           ),

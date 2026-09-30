@@ -37,7 +37,7 @@ class PenugasanScreen extends StatelessWidget {
                   const _TripRow(icon: Icons.location_on_outlined, label: 'Rute', value: 'Jakarta → Bandung'),
                   const _TripRow(icon: Icons.calendar_today_outlined, label: 'Tanggal', value: '15 Mei 2024'),
                   const _TripRow(icon: Icons.access_time_outlined, label: 'Waktu', value: '08:00 – 16:00 (1 Hari)'),
-                  const _TripRow(icon: Icons.group_outlined, label: 'Jumlah Penumpang', value: '10 Orang'),
+                  const _TripRow(icon: Icons.group_outlined, label: 'Penumpang', value: '10 Orang'),
                 ],
               ),
             ),

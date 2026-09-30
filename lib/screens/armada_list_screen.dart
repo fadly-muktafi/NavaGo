@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
+import '../theme/app_colors.dart';
 import '../widgets/common.dart';
 import '../widgets/navago_app_bar.dart';
 import 'armada_detail_screen.dart';
@@ -58,11 +59,14 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
+                          const Icon(Icons.search_off_outlined, size: 40, color: AppColors.neutral400),
+                          const SizedBox(height: 8),
                           Text(
                             query.isEmpty
                                 ? 'Belum ada armada pada filter ini.'
                                 : 'Tidak ada hasil untuk "$query".',
                             textAlign: TextAlign.center,
+                            style: Theme.of(context).textTheme.bodyMedium,
                           ),
                           const SizedBox(height: 8),
                           TextButton(

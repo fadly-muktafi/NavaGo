@@ -115,6 +115,9 @@ class _ArmadaDetailScreenState extends State<ArmadaDetailScreen> {
                 child: const Text('Ajukan Maintenance'),
               ),
             ),
+            const SizedBox(height: 6),
+            Text('Form pengajuan segera hadir.',
+              style: Theme.of(context).textTheme.labelSmall, textAlign: TextAlign.center),
             const SizedBox(height: 20),
             // Section Maintenance (PRD: bagian dari Detail, tanpa kalender)
             Text('Maintenance kendaraan ini', style: Theme.of(context).textTheme.titleLarge),
@@ -176,10 +179,15 @@ class _InfoCell extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text(label, style: const TextStyle(fontSize: 11, color: AppColors.neutral600)),
+              Text(label, style: Theme.of(context).textTheme.labelSmall),
               Tooltip(
                 message: value,
-                child: Text(value, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700), maxLines: 2, overflow: TextOverflow.ellipsis),
+                child: Text(value,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    fontFeatures: const [FontFeature.tabularFigures()],
+                  ),
+                  maxLines: 2, overflow: TextOverflow.ellipsis),
               ),
             ],
           ),
