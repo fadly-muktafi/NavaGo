@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-
-/// AppBar NavaGo: logo kiri + lonceng kanan (PRD: notifikasi via ikon lonceng).
+/// AppBar RentGo: logo + nama aplikasi di kiri, lonceng kanan
+/// (PRD: notifikasi via ikon lonceng). Wordmark selalu tampil.
 class NavagoAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String? title;
   final bool showBack;
   final VoidCallback? onBellTap;
-  const NavagoAppBar(
-      {super.key, this.title, this.showBack = false, this.onBellTap});
+  const NavagoAppBar({super.key, this.showBack = false, this.onBellTap});
 
   @override
   Size get preferredSize => const Size.fromHeight(56);
@@ -22,26 +20,35 @@ class NavagoAppBar extends StatelessWidget implements PreferredSizeWidget {
           if (showBack)
             IconButton(
               tooltip: 'Kembali',
-              icon: const Icon(Icons.chevron_left, size: 26),
+              icon: const Icon(Icons.chevron_left, size: 24),
               onPressed: () => Navigator.of(context).maybePop(),
             ),
-          Container(
-            width: 28,
-            height: 28,
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
-                colors: [Color(0xFF0B8F76), Color(0xFF12A98A)],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.asset(
+              'assets/images/rentgo-logo.png',
+              width: 28,
+              height: 28,
+              fit: BoxFit.cover,
+              errorBuilder: (context, _, __) => Container(
+                width: 28,
+                height: 28,
+                decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primary600, AppColors.primary500],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                alignment: Alignment.center,
+                child: const Text('R',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w800,
+                        fontSize: 16)),
               ),
-              borderRadius: BorderRadius.circular(8),
             ),
-            alignment: Alignment.center,
-            child: const Text('N',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w800,
-                    fontSize: 16)),
           ),
           const SizedBox(width: 8),
           RichText(
@@ -49,9 +56,10 @@ class NavagoAppBar extends StatelessWidget implements PreferredSizeWidget {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),
               children: [
                 TextSpan(
-                    text: 'Nava', style: TextStyle(color: AppColors.navy900)),
+                    text: 'Rent',
+                    style: TextStyle(color: AppColors.navy900)),
                 TextSpan(
-                    text: 'Go', style: TextStyle(color: AppColors.primary600)),
+                    text: 'Go', style: TextStyle(color: AppColors.primaryText)),
               ],
             ),
           ),

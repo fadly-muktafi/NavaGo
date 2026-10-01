@@ -28,7 +28,7 @@ class NavagoBottomNav extends StatelessWidget {
           child: Row(
             children: List.generate(items.length, (i) {
               final active = i == currentIndex;
-              final color = active ? AppColors.primary600 : AppColors.neutral400;
+              final color = active ? AppColors.primaryText : AppColors.neutral500;
               return Expanded(
                 child: Semantics(
                   selected: active,
@@ -48,7 +48,7 @@ class NavagoBottomNav extends StatelessWidget {
                             Icon(active ? items[i].$2 : items[i].$1, color: color, size: 24),
                             const SizedBox(height: 2),
                             Text(items[i].$3,
-                              style: TextStyle(fontSize: 11, fontWeight: FontWeight.w500, color: color)),
+                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color)),
                           ],
                         ),
                       ),

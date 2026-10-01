@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../theme/app_colors.dart';
 
 /// Mock data UI-only — tiru isi desain-ui.jpeg.
 /// Nanti diganti kontrak API (PRD §4.4 TBD).
@@ -20,22 +21,22 @@ extension VehicleStatusX on VehicleStatus {
   Color get textColor {
     switch (this) {
       case VehicleStatus.tersedia:
-        return const Color(0xFF0B8F76);
+        return AppColors.primaryText;
       case VehicleStatus.onTrip:
-        return const Color(0xFF2F80ED);
+        return AppColors.infoText;
       case VehicleStatus.maintenance:
-        return const Color(0xFFE5484D);
+        return AppColors.dangerText;
     }
   }
 
   Color get bgColor {
     switch (this) {
       case VehicleStatus.tersedia:
-        return const Color(0xFFDDF4EC);
+        return AppColors.primary100;
       case VehicleStatus.onTrip:
-        return const Color(0xFFE3EEFD);
+        return AppColors.infoBg;
       case VehicleStatus.maintenance:
-        return const Color(0xFFFDE7E8);
+        return AppColors.dangerBg;
     }
   }
 }
@@ -68,9 +69,35 @@ class MaintenanceItemData {
     required this.sisa,
     required this.kind,
   });
+
+  /// Sisa hari ter-parse dari label ("3 hari lagi" -> 3).
+  int? get daysLeft => int.tryParse(sisa.split(' ').first);
 }
 
 enum MaintenanceKind { service, dokumen, lainnya }
+
+/// Ringkasan satu penugasan trip milik driver (sumber tunggal untuk
+/// layar Penugasan dan section "Tugas berikutnya" di Beranda).
+class TripSummary {
+  final String id;
+  final String rute;
+  final String tanggal;
+  final String waktu;
+  final String penumpang;
+  final String tipe;
+  final String plat;
+  final String kendaraan;
+  const TripSummary({
+    required this.id,
+    required this.rute,
+    required this.tanggal,
+    required this.waktu,
+    required this.penumpang,
+    required this.tipe,
+    required this.plat,
+    required this.kendaraan,
+  });
+}
 
 class MockData {
   static const driverName = 'Budi Santoso';
@@ -101,4 +128,40 @@ class MockData {
   static const kpiMaintenance = '5';
   static const kpiDriverAktif = '42';
   static const kpiDokJatuhTempo = '7';
+
+  /// Maksimal 3 tugas teratas terurut tanggal terdekat. Satu-satunya
+  /// sumber data trip untuk Beranda dan Penugasan — tugas baru cukup
+  /// ditambahkan di sini (nanti: 3 teratas dari API terurut tanggal).
+  static const tugasTerdekat = <TripSummary>[
+    TripSummary(
+      id: 'TRP-20240514-001',
+      rute: 'Jakarta → Bandung',
+      tanggal: '15 Mei 2024',
+      waktu: '08:00 – 16:00 (1 Hari)',
+      penumpang: '10 Orang',
+      tipe: 'Reguler',
+      plat: 'B 1234 KLM',
+      kendaraan: 'Toyota Hiace • 12 kursi',
+    ),
+    TripSummary(
+      id: 'TRP-20240516-002',
+      rute: 'Jakarta → Bogor',
+      tanggal: '16 Mei 2024',
+      waktu: '09:00 – 14:00 (1 Hari)',
+      penumpang: '7 Orang',
+      tipe: 'Reguler',
+      plat: 'B 6789 WXY',
+      kendaraan: 'Toyota Avanza • 7 kursi',
+    ),
+    TripSummary(
+      id: 'TRP-20240518-003',
+      rute: 'Bandung → Jakarta',
+      tanggal: '18 Mei 2024',
+      waktu: '08:00 – 16:00 (1 Hari)',
+      penumpang: '10 Orang',
+      tipe: 'Carter',
+      plat: 'B 1234 KLM',
+      kendaraan: 'Toyota Hiace • 12 kursi',
+    ),
+  ];
 }

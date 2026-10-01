@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/navago_app_bar.dart';
 import 'armada_detail_screen.dart';
@@ -12,10 +13,71 @@ class ArmadaListScreen extends StatefulWidget {
   State<ArmadaListScreen> createState() => _ArmadaListScreenState();
 }
 
-class _ArmadaListScreenState extends State<ArmadaListScreen> {
+class _ArmadaListScreenState extends State<ArmadaListScreen>
+    with SingleTickerProviderStateMixin {
   int filter = 0;
   String query = '';
+  final _searchController = TextEditingController();
   static const filters = ['Semua', 'Tersedia', 'On Trip', 'Maintenance'];
+
+  /// Entrance stagger satu-kali (maksimal 5 item mock). Ganti filter tidak
+  /// memutar ulang: setelah selesai, item dirender statis.
+  late final AnimationController _enter;
+  bool _enterDone = false;
+  static const _stepMs = 50;
+  static const _baseMs = 300;
+  static const _totalMs = _baseMs + _stepMs * 4;
+
+  @override
+  void initState() {
+    super.initState();
+    _enter = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: _totalMs),
+    )..addStatusListener((s) {
+        if (s == AnimationStatus.completed) {
+          setState(() => _enterDone = true);
+        }
+      });
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _enter.value = 1.0;
+      _enterDone = true;
+    } else if (_enter.status == AnimationStatus.dismissed) {
+      _enter.forward();
+    }
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    _enter.dispose();
+    super.dispose();
+  }
+
+  Widget _enterItem(int index, Widget child) {
+    if (_enterDone) return child;
+    final fade = CurvedAnimation(
+      parent: _enter,
+      curve: Interval(
+        index * _stepMs / _totalMs,
+        (index * _stepMs + _baseMs) / _totalMs,
+        curve: kEaseOut,
+      ),
+    );
+    final slide = Tween<Offset>(
+      begin: const Offset(0, 0.1),
+      end: Offset.zero,
+    ).animate(fade);
+    return FadeTransition(
+      opacity: fade,
+      child: SlideTransition(position: slide, child: child),
+    );
+  }
 
   List<Vehicle> get shown {
     return MockData.vehicles.where((v) {
@@ -36,7 +98,7 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
   Widget build(BuildContext context) {
     final list = shown;
     return Scaffold(
-      appBar: const NavagoAppBar(title: 'Daftar Armada'),
+      appBar: const NavagoAppBar(),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
         child: Column(
@@ -49,7 +111,7 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            NavagoSearch(hint: 'Cari plat nomor, tipe, atau lokasi...', onChanged: (v) => setState(() => query = v)),
+            NavagoSearch(hint: 'Cari plat nomor, tipe, atau lokasi...', controller: _searchController, onChanged: (v) => setState(() => query = v)),
             const SizedBox(height: 10),
             FilterChips(labels: filters, selected: filter, onSelected: (i) => setState(() => filter = i)),
             const SizedBox(height: 10),
@@ -70,10 +132,16 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
                           ),
                           const SizedBox(height: 8),
                           TextButton(
-                            onPressed: () => setState(() {
-                              filter = 0;
-                              query = '';
-                            }),
+                            style: TextButton.styleFrom(
+                              minimumSize: const Size(64, 44),
+                            ),
+                            onPressed: () {
+                              _searchController.clear();
+                              setState(() {
+                                filter = 0;
+                                query = '';
+                              });
+                            },
                             child: const Text('Hapus filter'),
                           ),
                         ],
@@ -85,11 +153,30 @@ class _ArmadaListScreenState extends State<ArmadaListScreen> {
                       separatorBuilder: (_, __) => const SizedBox(height: 12),
                       itemBuilder: (context, i) {
                         final v = list[i];
-                        return VehicleListItem(
-                          plat: v.plat, tipe: v.tipe, kapasitas: v.kapasitas, lokasi: v.lokasi,
-                          statusLabel: v.status.label, statusFg: v.status.textColor, statusBg: v.status.bgColor,
-                          onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(builder: (_) => ArmadaDetailScreen(vehicle: v)),
+                        return _enterItem(
+                          i,
+                          VehicleListItem(
+                            key: ValueKey(v.plat),
+                            plat: v.plat, tipe: v.tipe, kapasitas: v.kapasitas, lokasi: v.lokasi,
+                            statusLabel: v.status.label, statusFg: v.status.textColor, statusBg: v.status.bgColor,
+                            onTap: () {
+                              // Reduce-motion: matikan transisi rute + Hero.
+                              if (MediaQuery.disableAnimationsOf(context)) {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    pageBuilder: (_, __, ___) => ArmadaDetailScreen(vehicle: v),
+                                    transitionDuration: Duration.zero,
+                                    reverseTransitionDuration: Duration.zero,
+                                  ),
+                                );
+                              } else {
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(
+                                    builder: (_) => ArmadaDetailScreen(vehicle: v),
+                                  ),
+                                );
+                              }
+                            },
                           ),
                         );
                       },
