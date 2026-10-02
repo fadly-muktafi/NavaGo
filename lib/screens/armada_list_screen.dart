@@ -106,22 +106,32 @@ class _ArmadaListScreenState extends State<ArmadaListScreen>
           children: [
             Row(
               children: [
-                Expanded(child: Text('Daftar armada', style: Theme.of(context).textTheme.titleLarge)),
-                Text('${MockData.vehicles.length} armada', style: Theme.of(context).textTheme.bodySmall),
+                Expanded(
+                    child: Text('Daftar armada',
+                        style: Theme.of(context).textTheme.titleLarge)),
+                Text('${MockData.vehicles.length} armada',
+                    style: Theme.of(context).textTheme.bodySmall),
               ],
             ),
-            const SizedBox(height: 10),
-            NavagoSearch(hint: 'Cari plat nomor, tipe, atau lokasi...', controller: _searchController, onChanged: (v) => setState(() => query = v)),
-            const SizedBox(height: 10),
-            FilterChips(labels: filters, selected: filter, onSelected: (i) => setState(() => filter = i)),
-            const SizedBox(height: 10),
+            const SizedBox(height: 12),
+            NavagoSearch(
+                hint: 'Cari plat nomor, tipe, atau lokasi...',
+                controller: _searchController,
+                onChanged: (v) => setState(() => query = v)),
+            const SizedBox(height: 12),
+            FilterChips(
+                labels: filters,
+                selected: filter,
+                onSelected: (i) => setState(() => filter = i)),
+            const SizedBox(height: 12),
             Expanded(
               child: list.isEmpty
                   ? Center(
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          const Icon(Icons.search_off_outlined, size: 40, color: AppColors.neutral400),
+                          const Icon(Icons.search_off_outlined,
+                              size: 40, color: AppColors.neutral400),
                           const SizedBox(height: 8),
                           Text(
                             query.isEmpty
@@ -157,14 +167,20 @@ class _ArmadaListScreenState extends State<ArmadaListScreen>
                           i,
                           VehicleListItem(
                             key: ValueKey(v.plat),
-                            plat: v.plat, tipe: v.tipe, kapasitas: v.kapasitas, lokasi: v.lokasi,
-                            statusLabel: v.status.label, statusFg: v.status.textColor, statusBg: v.status.bgColor,
+                            plat: v.plat,
+                            tipe: v.tipe,
+                            kapasitas: v.kapasitas,
+                            lokasi: v.lokasi,
+                            statusLabel: v.status.label,
+                            statusFg: v.status.textColor,
+                            statusBg: v.status.bgColor,
                             onTap: () {
                               // Reduce-motion: matikan transisi rute + Hero.
                               if (MediaQuery.disableAnimationsOf(context)) {
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
-                                    pageBuilder: (_, __, ___) => ArmadaDetailScreen(vehicle: v),
+                                    pageBuilder: (_, __, ___) =>
+                                        ArmadaDetailScreen(vehicle: v),
                                     transitionDuration: Duration.zero,
                                     reverseTransitionDuration: Duration.zero,
                                   ),
@@ -172,7 +188,8 @@ class _ArmadaListScreenState extends State<ArmadaListScreen>
                               } else {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (_) => ArmadaDetailScreen(vehicle: v),
+                                    builder: (_) =>
+                                        ArmadaDetailScreen(vehicle: v),
                                   ),
                                 );
                               }

@@ -47,8 +47,14 @@ class NavagoBottomNav extends StatelessWidget {
                           children: [
                             Icon(active ? items[i].$2 : items[i].$1, color: color, size: 24),
                             const SizedBox(height: 2),
-                            Text(items[i].$3,
-                              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color)),
+                            // Satu baris selalu: susut hanya saat terdesak
+                            // (320px + font-scale besar), tanpa memenggal kata.
+                            FittedBox(
+                              fit: BoxFit.scaleDown,
+                              child: Text(items[i].$3,
+                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(color: color),
+                                  maxLines: 1),
+                            ),
                           ],
                         ),
                       ),

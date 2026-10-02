@@ -164,4 +164,11 @@ class MockData {
       kendaraan: 'Toyota Hiace • 12 kursi',
     ),
   ];
+
+  /// Riwayat trip selesai di Profile (terbaru dulu).
+  static const tripHistory = <({String date, String route, String vehicle})>[
+    (date: '14 Mei 2024', route: 'Jakarta → Bandung', vehicle: 'B 1234 KLM • Hiace'),
+    (date: '12 Mei 2024', route: 'Jakarta → Bekasi', vehicle: 'B 9012 QRS • Dutro'),
+    (date: '10 Mei 2024', route: 'Depok → Tangerang', vehicle: 'B 6789 WXY • Avanza'),
+  ];
 }

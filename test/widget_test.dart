@@ -1,10 +1,44 @@
 // Smoke test UI-only NavaGo.
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:navago/main.dart';
 import 'package:navago/widgets/common.dart';
 
+/// Muat font asli (bukan Ahem) agar pengukuran layout di test = device.
+/// Ahem melebar-kan tiap karakter 2x — semua "overflow" jadi palsu.
+Future<void> _loadRealFonts() async {
+  final families = {
+    'PlusJakartaSans': [
+      'fonts/PlusJakartaSans-Regular.ttf',
+      'fonts/PlusJakartaSans-Medium.ttf',
+      'fonts/PlusJakartaSans-SemiBold.ttf',
+      'fonts/PlusJakartaSans-Bold.ttf',
+      'fonts/PlusJakartaSans-ExtraBold.ttf',
+    ],
+    'Roboto': [
+      'fonts/PlusJakartaSans-Regular.ttf',
+      'fonts/PlusJakartaSans-Medium.ttf',
+      'fonts/PlusJakartaSans-SemiBold.ttf',
+      'fonts/PlusJakartaSans-Bold.ttf',
+      'fonts/PlusJakartaSans-ExtraBold.ttf',
+    ],
+  };
+  for (final entry in families.entries) {
+    final loader = FontLoader(entry.key);
+    for (final path in entry.value) {
+      loader.addFont(Future(() async =>
+          ByteData.view(File(path).readAsBytesSync().buffer)));
+    }
+    await loader.load();
+  }
+}
+
 void main() {
+  setUpAll(_loadRealFonts);
+
   testWidgets('App boots with 5 bottom nav tabs', (WidgetTester tester) async {
     await tester.pumpWidget(const NavagoApp());
     await tester.pumpAndSettle();
@@ -65,5 +99,29 @@ void main() {
     await tester.tap(find.text('Riwayat Trip'));
     await tester.pumpAndSettle();
     expect(find.text('Jakarta → Bandung'), findsWidgets);
+  });
+
+  testWidgets('App penuh bebas overflow di 320px + font-scale 1.3',
+      (WidgetTester tester) async {
+    // Kondisi ekstrem (PRD: font-scale 130% tidak terpotong): kelima tab
+    // diuji; RenderFlex overflowed otomatis menggagalkan test ini.
+    tester.view.physicalSize = const Size(320, 800);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      MediaQuery(
+        data: const MediaQueryData(textScaler: TextScaler.linear(1.3)),
+        child: const NavagoApp(),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expect(tester.takeException(), isNull);
+
+    for (final tab in const ['Armada', 'Penugasan', 'Monitoring', 'Profile']) {
+      await tester.tap(find.text(tab).last);
+      await tester.pumpAndSettle();
+      expect(tester.takeException(), isNull);
+    }
   });
 }

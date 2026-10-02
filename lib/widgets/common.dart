@@ -21,7 +21,7 @@ class StatusBadge extends StatelessWidget {
           color: textColor,
         );
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: kPillPadding,
       decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(999),
@@ -201,10 +201,14 @@ class FilterChips extends StatelessWidget {
         // Ruang tidak cukup: scroll horizontal dengan padding dasar.
         // SingleChildScrollView (bukan ListView fixed-height) agar tinggi
         // mengikuti chip saat font-scale membesar — tanpa overflow.
+        // minHeight yang sama: garansi ketuk berlaku di kedua jalur.
         if (baseTotal > constraints.maxWidth) {
           return SingleChildScrollView(
             scrollDirection: Axis.horizontal,
-            child: row(_basePadH),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 44),
+              child: row(_basePadH),
+            ),
           );
         }
 
@@ -256,8 +260,8 @@ class FilterChips extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.visible,
               style: base.merge(_labelStyle).copyWith(
-                color: active ? Colors.white : AppColors.neutral600,
-              ),
+                    color: active ? Colors.white : AppColors.neutral600,
+                  ),
             ),
           ),
         ),
@@ -409,8 +413,8 @@ class VehicleListItem extends StatelessWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                      const Icon(Icons.location_on_outlined,
-                          size: 14, color: AppColors.neutral400),
+                        const Icon(Icons.location_on_outlined,
+                            size: 14, color: AppColors.neutral400),
                         const SizedBox(width: 2),
                         Expanded(
                             child: Text(lokasi,
@@ -422,6 +426,8 @@ class VehicleListItem extends StatelessWidget {
                   ],
                 ),
               ),
+              // Guard gutter: teks penuh + ellipsis tak menempel chevron.
+              const SizedBox(width: 8),
               const Icon(Icons.chevron_right, color: AppColors.neutral400),
             ],
           ),
@@ -470,7 +476,7 @@ class MaintenanceListItem extends StatelessWidget {
                 color: iconBg, borderRadius: BorderRadius.circular(8)),
             child: Icon(icon, color: iconColor, size: 20),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -478,6 +484,7 @@ class MaintenanceListItem extends StatelessWidget {
                 Text(judul,
                     style: textTheme.bodyMedium
                         ?.copyWith(fontWeight: FontWeight.w700)),
+                const SizedBox(height: 2),
                 Text(subjudul,
                     style: textTheme.bodySmall,
                     maxLines: 1,
@@ -485,6 +492,8 @@ class MaintenanceListItem extends StatelessWidget {
               ],
             ),
           ),
+          // Guard gutter sebelum kolom tanggal/badge.
+          const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -542,7 +551,9 @@ class TripStepper extends StatelessWidget {
       children: List.generate(2, (i) {
         final active = i <= current;
         final color = active ? AppColors.primary600 : AppColors.neutral200;
-        final textColor = active ? AppColors.primary600 : AppColors.neutral400;
+        // Kontras terukur: label 11px butuh 4.5:1 — primaryText 6.45 ✓,
+        // neutral500 4.62 ✓ (primary600 4.03 / neutral400 2.55 ✗).
+        final textColor = active ? AppColors.primaryText : AppColors.neutral500;
         return Expanded(
           child: Row(
             children: [
@@ -550,7 +561,8 @@ class TripStepper extends StatelessWidget {
                 width: 26,
                 height: 26,
                 decoration: BoxDecoration(
-                    color: active ? AppColors.primary600 : AppColors.neutral200,
+                    // primary700: angka putih 12px butuh 4.5:1 (5.28 ✓).
+                    color: active ? AppColors.primary700 : AppColors.neutral200,
                     shape: BoxShape.circle),
                 alignment: Alignment.center,
                 child: Text('${i + 1}',
@@ -559,7 +571,7 @@ class TripStepper extends StatelessWidget {
                         fontSize: 12,
                         fontWeight: FontWeight.w700)),
               ),
-              const SizedBox(width: 6),
+              const SizedBox(width: 8),
               Text(labels[i], style: labelStyle?.copyWith(color: textColor)),
               if (i == 0)
                 Expanded(
@@ -585,7 +597,7 @@ class MapPlaceholder extends StatelessWidget {
       label:
           'Peta rute Jakarta ke Bandung, status live. Kendaraan B 1234 KLM 70 kilometer per jam menuju Bandung.',
       child: Container(
-        height: 220,
+        height: kMapHeight,
         decoration: BoxDecoration(
           color: AppColors.neutral100,
           borderRadius: BorderRadius.circular(16),
@@ -614,8 +626,7 @@ class MapPlaceholder extends StatelessWidget {
               right: 12,
               top: 12,
               child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                padding: kPillPadding,
                 decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(999),
@@ -779,7 +790,7 @@ class TugasBerikutnyaCard extends StatelessWidget {
                       child: const Icon(Icons.directions_bus,
                           color: AppColors.primary600, size: 20),
                     ),
-                    const SizedBox(width: 10),
+                    const SizedBox(width: 12),
                     Expanded(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -792,16 +803,19 @@ class TugasBerikutnyaCard extends StatelessWidget {
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
                           ),
+                          const SizedBox(height: 2),
                           Tooltip(
                             message: trip.kendaraan,
                             child: Text(trip.kendaraan,
-                                style: textTheme.labelSmall,
+                                style: textTheme.bodySmall,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis),
                           ),
                         ],
                       ),
                     ),
+                    // Guard gutter: teks penuh + ellipsis tak menempel chevron.
+                    const SizedBox(width: 8),
                     const Icon(Icons.chevron_right,
                         color: AppColors.neutral400),
                   ],

@@ -109,7 +109,22 @@ class _DashboardScreenState extends State<DashboardScreen>
                     ],
                   ),
                 ),
-                Text(MockData.greetingDate, style: textTheme.labelSmall),
+                // Align kanan-atas: mengunci ke edge, sejajar baris 'Halo,'.
+                // Guard gutter 8: nama penuh tak menempel tanggal.
+                const SizedBox(width: 8),
+                Flexible(
+                  child: Align(
+                    alignment: Alignment.topRight,
+                    child: Tooltip(
+                      message: MockData.greetingDate,
+                      child: Text(MockData.greetingDate,
+                          style: textTheme.labelSmall,
+                          textAlign: TextAlign.end,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 12),
@@ -150,10 +165,10 @@ class _DashboardScreenState extends State<DashboardScreen>
                 ],
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 20),
             LayoutBuilder(
               builder: (context, constraints) {
-                final narrow = constraints.maxWidth < 340;
+                final narrow = constraints.maxWidth < kGridNarrowBreakpoint;
                 final cards = [
                   _enterCard(
                       0,
@@ -173,12 +188,12 @@ class _DashboardScreenState extends State<DashboardScreen>
                           value: MockData.kpiTersedia)),
                   _enterCard(
                       2,
-                        const KpiCard(
-                            icon: Icons.directions_car,
-                            iconColor: AppColors.warningText,
-                            iconBg: AppColors.warningBg,
-                            label: 'On Trip',
-                            value: MockData.kpiOnTrip)),
+                      const KpiCard(
+                          icon: Icons.directions_car,
+                          iconColor: AppColors.warningText,
+                          iconBg: AppColors.warningBg,
+                          label: 'On Trip',
+                          value: MockData.kpiOnTrip)),
                   _enterCard(
                       3,
                       const KpiCard(
@@ -239,10 +254,7 @@ class _DashboardScreenState extends State<DashboardScreen>
             if (MockData.tugasTerdekat.isNotEmpty) ...[
               SectionHeader(
                 title: 'Tugas berikutnya',
-                seeAllLabel: 'Lihat semua tugas',
-                onSeeAll: widget.onOpenPenugasan == null
-                    ? null
-                    : () => widget.onOpenPenugasan!(MockData.tugasTerdekat.first),
+                onSeeAll: null,
               ),
               const SizedBox(height: 8),
               for (int i = 0; i < MockData.tugasTerdekat.length; i++) ...[
@@ -251,7 +263,8 @@ class _DashboardScreenState extends State<DashboardScreen>
                   trip: MockData.tugasTerdekat[i],
                   onTap: widget.onOpenPenugasan == null
                       ? null
-                      : () => widget.onOpenPenugasan!(MockData.tugasTerdekat[i]),
+                      : () =>
+                          widget.onOpenPenugasan!(MockData.tugasTerdekat[i]),
                 ),
               ],
             ],

@@ -40,20 +40,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             // Header
             Row(
               children: [
-                const CircleAvatar(radius: 30, child: Icon(Icons.person_outline, size: 32)),
+                const CircleAvatar(
+                    radius: 30, child: Icon(Icons.person_outline, size: 32)),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      StatusBadge(label: 'Aktif', textColor: AppColors.successText, bgColor: AppColors.successBg),
+                      StatusBadge(
+                          label: 'Aktif',
+                          textColor: AppColors.successText,
+                          bgColor: AppColors.successBg),
                       const SizedBox(height: 4),
-                      Text(MockData.driverName, style: Theme.of(context).textTheme.titleLarge),
+                      Text(MockData.driverName,
+                          style: Theme.of(context).textTheme.titleLarge),
                       Row(
                         children: [
-                          const Icon(Icons.star, size: 14, color: AppColors.star),
+                          const Icon(Icons.star,
+                              size: 14, color: AppColors.star),
                           const SizedBox(width: 2),
-                          Text('4.8 (128 ulasan)', style: Theme.of(context).textTheme.bodySmall),
+                          Text('4.8 (128 ulasan)',
+                              style: Theme.of(context).textTheme.bodySmall),
                         ],
                       ),
                     ],
@@ -63,10 +70,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             const SizedBox(height: 12),
             const Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Expanded(child: _ContactCell(icon: Icons.phone_outlined, label: 'No. HP', value: MockData.driverPhone)),
+                Expanded(
+                    child: _ContactCell(
+                        icon: Icons.phone_outlined,
+                        label: 'No. HP',
+                        value: MockData.driverPhone)),
                 SizedBox(width: 12),
-                Expanded(child: _ContactCell(icon: Icons.email_outlined, label: 'Email', value: MockData.driverEmail)),
+                Expanded(
+                    child: _ContactCell(
+                        icon: Icons.email_outlined,
+                        label: 'Email',
+                        value: MockData.driverEmail)),
               ],
             ),
             const SizedBox(height: 12),
@@ -88,17 +104,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.neutral200),
                         boxShadow: const [AppColors.cardShadow],
                       ),
                       child: const Column(
                         children: [
                           _ProfileRow(label: 'SIM', value: 'A Umum'),
-                          _ProfileRow(label: 'Berlaku hingga', value: '12 Jan 2027'),
-                          _ProfileRow(label: 'Kendaraan Ditugaskan', value: 'B 1234 KLM (Toyota Hiace)'),
+                          _ProfileRow(
+                              label: 'Berlaku hingga', value: '12 Jan 2027'),
+                          _ProfileRow(
+                              label: 'Kendaraan',
+                              value: 'B 1234 KLM - Toyota Hiace'),
                           _ProfileRow(label: 'Total Trip', value: '156 Trip'),
-                          _ProfileRow(label: 'Rating', value: '4.8 (128 ulasan)'),
+                          _ProfileRow(
+                              label: 'Rating', value: '4.8 (128 ulasan)'),
                         ],
                       ),
                     );
@@ -109,33 +130,40 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.all(14),
                       decoration: BoxDecoration(
-                        color: Colors.white, borderRadius: BorderRadius.circular(12),
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
                         border: Border.all(color: AppColors.neutral200),
                         boxShadow: const [AppColors.cardShadow],
                       ),
                       child: const Column(
                         children: [
-                          _ProfileRow(label: 'SIM A Umum', value: 'Berlaku s/d 12 Jan 2027'),
+                          _ProfileRow(
+                              label: 'SIM A Umum',
+                              value: 'Berlaku s/d 12 Jan 2027'),
                           _ProfileRow(label: 'KTP', value: 'Terverifikasi'),
-                          _ProfileRow(label: 'SKCK', value: 'Berlaku s/d 01 Des 2025'),
+                          _ProfileRow(
+                              label: 'SKCK', value: 'Berlaku s/d 01 Des 2025'),
                         ],
                       ),
                     );
                   }
                   return Column(
                     key: const ValueKey('riwayat'),
-                    children: const [
-                      _TripHistory(date: '14 Mei 2024', route: 'Jakarta → Bandung', vehicle: 'B 1234 KLM • Hiace'),
-                      SizedBox(height: 8),
-                      _TripHistory(date: '12 Mei 2024', route: 'Jakarta → Bekasi', vehicle: 'B 9012 QRS • Dutro'),
-                      SizedBox(height: 8),
-                      _TripHistory(date: '10 Mei 2024', route: 'Depok → Tangerang', vehicle: 'B 6789 WXY • Avanza'),
+                    children: [
+                      for (int i = 0; i < MockData.tripHistory.length; i++) ...[
+                        if (i > 0) const SizedBox(height: 12),
+                        _TripHistory(
+                          date: MockData.tripHistory[i].date,
+                          route: MockData.tripHistory[i].route,
+                          vehicle: MockData.tripHistory[i].vehicle,
+                        ),
+                      ],
                     ],
                   );
                 },
               ),
             ),
-            const SizedBox(height: 14),
+            const SizedBox(height: 16),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -143,9 +171,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: const Text('Ubah Data'),
               ),
             ),
-            const SizedBox(height: 6),
-            Text('Form ubah data segera hadir. Perubahan rating, total trip, dan kendaraan ditugaskan mengikuti sistem.',
-              style: Theme.of(context).textTheme.labelSmall, textAlign: TextAlign.center),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Text(
+                  'Form ubah data segera hadir. Perubahan rating, total trip, dan kendaraan ditugaskan mengikuti sistem.',
+                  style: Theme.of(context).textTheme.labelSmall,
+                  textAlign: TextAlign.center),
+            ),
           ],
         ),
       ),
@@ -157,29 +190,39 @@ class _ContactCell extends StatelessWidget {
   final IconData icon;
   final String label;
   final String value;
-  const _ContactCell({required this.icon, required this.label, required this.value});
+  const _ContactCell(
+      {required this.icon, required this.label, required this.value});
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.neutral200),
         boxShadow: const [AppColors.cardShadow],
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 18, color: AppColors.primary600),
+          Padding(
+            padding: const EdgeInsets.only(top: 2),
+            child: Icon(icon, size: 18, color: AppColors.primary600),
+          ),
           const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(label, style: Theme.of(context).textTheme.labelSmall),
+                const SizedBox(height: 2),
                 Tooltip(
                   message: value,
                   child: Text(value,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis),
                 ),
@@ -202,17 +245,22 @@ class _ProfileRow extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(child: Text(label, style: textTheme.bodySmall)),
           const SizedBox(width: 8),
           Flexible(
-            child: Tooltip(
-              message: value,
-              child: Text(value,
-                  style: textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.end),
+            child: Padding(
+              padding: const EdgeInsets.only(top: 2),
+              child: Tooltip(
+                message: value,
+                child: Text(value,
+                    style: textTheme.bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w700),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.end),
+              ),
             ),
           ),
         ],
@@ -225,24 +273,30 @@ class _TripHistory extends StatelessWidget {
   final String date;
   final String route;
   final String vehicle;
-  const _TripHistory({required this.date, required this.route, required this.vehicle});
+  const _TripHistory(
+      {required this.date, required this.route, required this.vehicle});
   @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white, borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.neutral200),
         boxShadow: const [AppColors.cardShadow],
       ),
       child: Row(
         children: [
           Container(
-            width: 40, height: 40,
-            decoration: BoxDecoration(color: AppColors.primary100, borderRadius: BorderRadius.circular(8)),
-            child: const Icon(Icons.route, color: AppColors.primary600),
+            width: 40,
+            height: 40,
+            decoration: BoxDecoration(
+                color: AppColors.primary100,
+                borderRadius: BorderRadius.circular(8)),
+            child:
+                const Icon(Icons.route, size: 20, color: AppColors.primary600),
           ),
-          const SizedBox(width: 10),
+          const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,10 +304,14 @@ class _TripHistory extends StatelessWidget {
                 Tooltip(
                   message: route,
                   child: Text(route,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w700),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis),
                 ),
+                const SizedBox(height: 2),
                 Tooltip(
                   message: '$date • $vehicle',
                   child: Text('$date • $vehicle',
@@ -264,7 +322,12 @@ class _TripHistory extends StatelessWidget {
               ],
             ),
           ),
-          StatusBadge(label: 'Selesai', textColor: AppColors.successText, bgColor: AppColors.successBg),
+          // Guard gutter: teks penuh + ellipsis tak menempel badge.
+          const SizedBox(width: 8),
+          StatusBadge(
+              label: 'Selesai',
+              textColor: AppColors.successText,
+              bgColor: AppColors.successBg),
         ],
       ),
     );

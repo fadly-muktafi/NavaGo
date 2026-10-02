@@ -28,7 +28,7 @@ class ArmadaDetailScreen extends StatelessWidget {
               child: Hero(
                 tag: 'vehicle-${v.plat}',
                 child: Container(
-                  height: 190,
+                  height: kDetailHeroHeight,
                   decoration: BoxDecoration(
                       color: AppColors.neutral100,
                       borderRadius: BorderRadius.circular(16)),
@@ -58,6 +58,7 @@ class ArmadaDetailScreen extends StatelessWidget {
             const SizedBox(height: 8),
             const Wrap(
               spacing: 8,
+              runSpacing: 8,
               children: [
                 _SpecChip(icon: Icons.event_seat_outlined, label: '12 Kursi'),
                 _SpecChip(
@@ -95,11 +96,11 @@ class ArmadaDetailScreen extends StatelessWidget {
                         label: 'Tahun',
                         value: '2020'),
                   ];
-                  if (constraints.maxWidth < 300) {
+                  if (constraints.maxWidth < kInfoTileNarrowBreakpoint) {
                     return Column(
                       children: [
                         for (int i = 0; i < cells.length; i++) ...[
-                          if (i > 0) const SizedBox(height: 10),
+                          if (i > 0) const SizedBox(height: 12),
                           cells[i],
                         ],
                       ],
@@ -115,7 +116,7 @@ class ArmadaDetailScreen extends StatelessWidget {
                           Expanded(child: cells[1]),
                         ],
                       ),
-                      SizedBox(height: 10),
+                      SizedBox(height: 12),
                       Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -143,10 +144,13 @@ class ArmadaDetailScreen extends StatelessWidget {
                 child: const Text('Ajukan Maintenance'),
               ),
             ),
-            const SizedBox(height: 6),
-            Text('Form pengajuan segera hadir.',
-                style: Theme.of(context).textTheme.labelSmall,
-                textAlign: TextAlign.center),
+            const SizedBox(height: 8),
+            SizedBox(
+              width: double.infinity,
+              child: Text('Form pengajuan segera hadir.',
+                  style: Theme.of(context).textTheme.labelSmall,
+                  textAlign: TextAlign.center),
+            ),
             const SizedBox(height: 20),
             // Section Maintenance (PRD: bagian dari Detail, tanpa kalender).
             // Stateful sendiri agar ganti filter tidak me-rebuild seluruh halaman.
@@ -186,13 +190,13 @@ class _MaintenanceSectionState extends State<_MaintenanceSection> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text('Maintenance kendaraan ini',
-            style: Theme.of(context).textTheme.titleLarge),
-        const SizedBox(height: 10),
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 12),
         FilterChips(
             labels: cats,
             selected: catFilter,
             onSelected: (i) => setState(() => catFilter = i)),
-        const SizedBox(height: 10),
+        const SizedBox(height: 12),
         // Ganti filter di-crossfade (filter-nya sendiri tetap instan).
         AnimatedSwitcher(
           duration: MediaQuery.disableAnimationsOf(context)
@@ -205,7 +209,7 @@ class _MaintenanceSectionState extends State<_MaintenanceSection> {
             children: [
               for (final m in maintShown)
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 10),
+                  padding: const EdgeInsets.only(bottom: 12),
                   child: MaintenanceListItem(
                     icon: m.judul.contains('Oli')
                         ? Icons.opacity
@@ -255,8 +259,12 @@ class _InfoCell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(icon, size: 20, color: AppColors.primary600),
+        Padding(
+          padding: const EdgeInsets.only(top: 2),
+          child: Icon(icon, size: 18, color: AppColors.primary600),
+        ),
         const SizedBox(width: 8),
         Expanded(
           child: Column(
@@ -264,6 +272,7 @@ class _InfoCell extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(label, style: Theme.of(context).textTheme.labelSmall),
+              const SizedBox(height: 2),
               Tooltip(
                 message: value,
                 child: Text(value,

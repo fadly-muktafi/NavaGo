@@ -33,15 +33,23 @@ ThemeData buildNavagoTheme() {
   );
 
   final textTheme = base.textTheme.copyWith(
-    displayLarge: _style(size: 28, weight: FontWeight.bold, color: AppColors.neutral900),
+    displayLarge:
+        _style(size: 28, weight: FontWeight.bold, color: AppColors.neutral900),
     // Angka KPI/ringkasan — tabular diterapkan di titik pakai.
-    displayMedium: _style(size: 22, weight: FontWeight.w800, color: AppColors.neutral900),
-    titleLarge: _style(size: 18, weight: FontWeight.bold, color: AppColors.neutral900),
-    titleMedium: _style(size: 16, weight: FontWeight.w600, color: AppColors.neutral900),
-    bodyLarge: _style(size: 16, weight: FontWeight.normal, color: AppColors.neutral900),
-    bodyMedium: _style(size: 14, weight: FontWeight.normal, color: AppColors.neutral900),
-    bodySmall: _style(size: 12, weight: FontWeight.normal, color: AppColors.neutral600),
-    labelSmall: _style(size: 11, weight: FontWeight.w500, color: AppColors.neutral600),
+    displayMedium:
+        _style(size: 22, weight: FontWeight.w800, color: AppColors.neutral900),
+    titleLarge:
+        _style(size: 18, weight: FontWeight.bold, color: AppColors.neutral900),
+    titleMedium:
+        _style(size: 16, weight: FontWeight.w600, color: AppColors.neutral900),
+    bodyLarge: _style(
+        size: 16, weight: FontWeight.normal, color: AppColors.neutral900),
+    bodyMedium: _style(
+        size: 14, weight: FontWeight.normal, color: AppColors.neutral900),
+    bodySmall: _style(
+        size: 12, weight: FontWeight.normal, color: AppColors.neutral600),
+    labelSmall:
+        _style(size: 11, weight: FontWeight.w500, color: AppColors.neutral600),
   );
 
   return base.copyWith(
@@ -102,7 +110,8 @@ ThemeData buildNavagoTheme() {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: AppColors.neutral100,
-      hintStyle: _style(size: 13, weight: FontWeight.normal, color: AppColors.neutral400),
+      hintStyle: _style(
+          size: 13, weight: FontWeight.normal, color: AppColors.neutral400),
       prefixIconColor: AppColors.neutral400,
       suffixIconColor: AppColors.neutral600,
       border: OutlineInputBorder(
@@ -121,3 +130,22 @@ ThemeData buildNavagoTheme() {
 /// Kurva ease-out kuat untuk entrance/interaksi (ala Emil: bawaan terlalu
 /// lemah). Dipakai semua animasi entrance agar satu bahasa gerak.
 const kEaseOut = Cubic(0.23, 1, 0.32, 1);
+
+/// Padding pill status (badge, pill Live header, pill Live peta):
+/// satu sumber untuk ketiganya.
+const kPillPadding = EdgeInsets.symmetric(horizontal: 10, vertical: 4);
+
+/// Tinggi hero foto (detail) & peta (monitoring): media, bukan teks —
+/// fixed by design. Peta lebih tinggi karena ia sendiri kontennya.
+const kDetailHeroHeight = 190.0;
+const kMapHeight = 220.0;
+
+/// Breakpoint kolom→1 baris: dari konten masing-masing, bukan preset device.
+/// Grid KPI 2 kolom butuh ≥340; info-tile (sel lebih ramping) ≥300.
+const kGridNarrowBreakpoint = 340.0;
+const kInfoTileNarrowBreakpoint = 300.0;
+
+/// Clamp label baris trip: tak boleh <96 (label terpotong) atau >140
+/// (kolom nilai terjepit).
+const kTripLabelMinWidth = 96.0;
+const kTripLabelMaxWidth = 140.0;
