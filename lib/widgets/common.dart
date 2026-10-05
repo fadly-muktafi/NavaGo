@@ -25,7 +25,7 @@ class StatusBadge extends StatelessWidget {
       decoration: BoxDecoration(
           color: bgColor,
           borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: textColor.withOpacity(0.25))),
+          border: Border.all(color: textColor.withValues(alpha: 0.25))),
       child: Text(label, style: style),
     );
   }
@@ -731,8 +731,10 @@ class TugasBerikutnyaCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
+    // Jujur: umumkan tombol hanya bila benar bisa diketuk.
+    // (InkWell onTap:null otomatis tanpa ripple — render statis.)
     return Semantics(
-      button: true,
+      button: onTap != null,
       label: 'Tugas berikutnya: ${trip.rute}, ${trip.tanggal}',
       child: Material(
         color: Colors.transparent,

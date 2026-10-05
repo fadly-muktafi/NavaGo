@@ -87,7 +87,7 @@ void main() {
     expect(find.text('B 1234 KLM'), findsWidgets);
   });
 
-  testWidgets('Tab Profile berganti dengan crossfade',
+  testWidgets('Tab Profile berganti konten',
       (WidgetTester tester) async {
     await tester.pumpWidget(const NavagoApp());
     await tester.pumpAndSettle();

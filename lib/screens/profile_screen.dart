@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../data/mock_data.dart';
 import '../theme/app_colors.dart';
-import '../theme/app_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/sequential_fade.dart';
 import '../widgets/navago_app_bar.dart';
 
 /// US-05 Profile view-only (form Ubah Data ditunda).
@@ -25,6 +25,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   void _selectTab(int i) {
     setState(() => tab = i);
+    // Scroll reset menyusul di onSwapped: tepat saat konten baru muncul.
+  }
+
+  void _resetScroll() {
     if (_scrollController.hasClients) _scrollController.jumpTo(0);
   }
 
@@ -88,13 +92,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             const SizedBox(height: 12),
             FilterChips(labels: tabs, selected: tab, onSelected: _selectTab),
             const SizedBox(height: 12),
-            // Ganti tab di-crossfade (bukan jump); reduce-motion = instan.
-            AnimatedSwitcher(
-              duration: MediaQuery.disableAnimationsOf(context)
-                  ? Duration.zero
-                  : const Duration(milliseconds: 200),
-              switchInCurve: kEaseOut,
-              switchOutCurve: kEaseOut,
+            // Ganti tab fade berurutan (out habis → swap → in).
+            SequentialFade(
+              onSwapped: _resetScroll,
               child: Builder(
                 key: ValueKey(tab),
                 builder: (context) {

@@ -3,6 +3,7 @@ import '../data/mock_data.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/sequential_fade.dart';
 import '../widgets/navago_app_bar.dart';
 
 /// US-03 + US-04: Detail Armada read-only + section Maintenance per kendaraan.
@@ -197,13 +198,8 @@ class _MaintenanceSectionState extends State<_MaintenanceSection> {
             selected: catFilter,
             onSelected: (i) => setState(() => catFilter = i)),
         const SizedBox(height: 12),
-        // Ganti filter di-crossfade (filter-nya sendiri tetap instan).
-        AnimatedSwitcher(
-          duration: MediaQuery.disableAnimationsOf(context)
-              ? Duration.zero
-              : const Duration(milliseconds: 200),
-          switchInCurve: kEaseOut,
-          switchOutCurve: kEaseOut,
+        // Ganti filter fade berurutan (out habis → swap → in).
+        SequentialFade(
           child: Column(
             key: ValueKey(catFilter),
             children: [

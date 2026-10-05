@@ -24,7 +24,7 @@ class _DashboardScreenState extends State<DashboardScreen>
   late final List<Animation<Offset>> _slide;
 
   static const _stepMs = 50;
-  static const _baseMs = 300;
+  static const _baseMs = 250;
   static const _totalMs = _baseMs + _stepMs * 5;
 
   @override

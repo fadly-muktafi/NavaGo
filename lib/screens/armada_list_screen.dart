@@ -25,7 +25,7 @@ class _ArmadaListScreenState extends State<ArmadaListScreen>
   late final AnimationController _enter;
   bool _enterDone = false;
   static const _stepMs = 50;
-  static const _baseMs = 300;
+  static const _baseMs = 250;
   static const _totalMs = _baseMs + _stepMs * 4;
 
   @override

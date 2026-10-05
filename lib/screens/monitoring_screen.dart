@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
+import '../widgets/sequential_fade.dart';
 import '../widgets/navago_app_bar.dart';
 
 /// US-07 Monitoring — peta perjalanan driver sendiri (placeholder) + ringkasan global.
@@ -24,7 +25,11 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
 
   void _selectTab(int i) {
     setState(() => tab = i);
-    // Tab baru = pandangan baru: mulai dari atas, bukan sisa scroll tab lama.
+    // Scroll reset menyusul di onSwapped: tepat saat konten baru muncul,
+    // bukan saat konten lama masih fade-out.
+  }
+
+  void _resetScroll() {
     if (_scrollController.hasClients) _scrollController.jumpTo(0);
   }
 
@@ -71,13 +76,10 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
             const SizedBox(height: 12),
             FilterChips(labels: tabs, selected: tab, onSelected: _selectTab),
             const SizedBox(height: 12),
-            // Ganti tab di-crossfade (bukan jump); reduce-motion = instan.
-            AnimatedSwitcher(
-              duration: MediaQuery.disableAnimationsOf(context)
-                  ? Duration.zero
-                  : const Duration(milliseconds: 200),
-              switchInCurve: kEaseOut,
-              switchOutCurve: kEaseOut,
+            // Ganti tab fade berurutan (out habis → swap → in);
+            // reduce-motion dibaca sendiri oleh SequentialFade.
+            SequentialFade(
+              onSwapped: _resetScroll,
               child: Builder(
                 key: ValueKey(tab),
                 builder: (context) {
