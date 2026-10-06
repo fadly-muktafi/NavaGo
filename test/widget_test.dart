@@ -9,7 +9,9 @@ import 'package:navago/widgets/common.dart';
 
 /// Muat font asli (bukan Ahem) agar pengukuran layout di test = device.
 /// Ahem melebar-kan tiap karakter 2x — semua "overflow" jadi palsu.
-Future<void> _loadRealFonts() async {
+/// Muat font asli (bukan Ahem) agar pengukuran layout di test = device.
+/// Dipakai juga oleh trip_map_stream_test.
+Future<void> loadRealFontsForTest() async {
   final families = {
     'PlusJakartaSans': [
       'fonts/PlusJakartaSans-Regular.ttf',
@@ -37,7 +39,7 @@ Future<void> _loadRealFonts() async {
 }
 
 void main() {
-  setUpAll(_loadRealFonts);
+  setUpAll(loadRealFontsForTest);
 
   testWidgets('App boots with 5 bottom nav tabs', (WidgetTester tester) async {
     await tester.pumpWidget(const NavagoApp());

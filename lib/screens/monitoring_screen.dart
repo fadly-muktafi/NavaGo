@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:latlong2/latlong.dart';
+
+import '../services/location_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_theme.dart';
 import '../widgets/common.dart';
 import '../widgets/sequential_fade.dart';
+import '../widgets/trip_map_view.dart';
 import '../widgets/navago_app_bar.dart';
 
-/// US-07 Monitoring — peta perjalanan driver sendiri (placeholder) + ringkasan global.
+/// US-07 Monitoring — peta live perjalanan driver + ringkasan global.
 class MonitoringScreen extends StatefulWidget {
   const MonitoringScreen({super.key});
   @override
@@ -13,9 +17,21 @@ class MonitoringScreen extends StatefulWidget {
 }
 
 class _MonitoringScreenState extends State<MonitoringScreen> {
+  static const _jakarta = LatLng(-6.2088, 106.8456);
+  static const _bandung = LatLng(-6.9175, 107.6191);
+
   int tab = 0;
   static const tabs = ['Peta', 'Armada', 'Driver', 'Peringatan'];
   final _scrollController = ScrollController();
+  final _locationService = const LocationService();
+
+  /// Stream posisi live; null = belum ada izin (pakai posisi mock).
+  /// Dibuat sekali saat tab Peta pertama dibuka — bukan saat app start.
+  /// asBroadcastStream SEKALI di sini (bukan di widget): stream GPS
+  /// single-subscription didengar 2 StreamBuilder + di-listen ulang tiap
+  /// remount tab — tanpa ini: "Bad state: Stream has already been listened".
+  Stream<LatLng>? _liveStream;
+  bool _locationAsked = false;
 
   @override
   void dispose() {
@@ -27,6 +43,23 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
     setState(() => tab = i);
     // Scroll reset menyusul di onSwapped: tepat saat konten baru muncul,
     // bukan saat konten lama masih fade-out.
+    if (i == 0) _ensureLocation();
+  }
+
+  Future<void> _ensureLocation() async {
+    if (_locationAsked) return;
+    _locationAsked = true;
+    final state = await _locationService.requestPermission();
+    if (!mounted) return;
+    if (state == LocationState.granted) {
+      setState(() {
+        _liveStream = _locationService
+            .positionStream()
+            .map((p) => LatLng(p.latitude, p.longitude))
+            .asBroadcastStream();
+      });
+    }
+    // Ditolak/unavailable: tetap null → TripMapView pakai posisi mock.
   }
 
   void _resetScroll() {
@@ -88,7 +121,15 @@ class _MonitoringScreenState extends State<MonitoringScreen> {
                       key: const ValueKey('peta'),
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const MapPlaceholder(),
+                        TripMapView(
+                          origin: _jakarta,
+                          destination: _bandung,
+                          originLabel: 'Jakarta',
+                          destinationLabel: 'Bandung',
+                          infoText: 'B 1234 KLM • 70 km/jam • Menuju Bandung',
+                          livePosition: _liveStream,
+                          onEnableLocation: _ensureLocation,
+                        ),
                         const SizedBox(height: 12),
                         Row(
                           children: [

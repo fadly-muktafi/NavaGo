@@ -587,97 +587,13 @@ class TripStepper extends StatelessWidget {
   }
 }
 
-/// Placeholder peta (keputusan: placeholder dulu, tanpa map provider).
-class MapPlaceholder extends StatelessWidget {
-  const MapPlaceholder({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Semantics(
-      image: true,
-      label:
-          'Peta rute Jakarta ke Bandung, status live. Kendaraan B 1234 KLM 70 kilometer per jam menuju Bandung.',
-      child: Container(
-        height: kMapHeight,
-        decoration: BoxDecoration(
-          color: AppColors.neutral100,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.neutral200),
-        ),
-        child: Stack(
-          children: [
-            CustomPaint(painter: _RoutePainter(), size: Size.infinite),
-            const Positioned(
-              left: 12,
-              top: 40,
-              child: _MapPin(
-                  icon: Icons.directions_bus,
-                  label: 'Jakarta',
-                  color: AppColors.primary600),
-            ),
-            const Positioned(
-              right: 16,
-              bottom: 36,
-              child: _MapPin(
-                  icon: Icons.location_on,
-                  label: 'Bandung',
-                  color: AppColors.danger),
-            ),
-            Positioned(
-              right: 12,
-              top: 12,
-              child: Container(
-                padding: kPillPadding,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: AppColors.neutral200)),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const Icon(Icons.circle,
-                        size: 8, color: AppColors.primaryText),
-                    const SizedBox(width: 4),
-                    Text('Live',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                            fontWeight: FontWeight.w700,
-                            color: AppColors.primaryText)),
-                  ],
-                ),
-              ),
-            ),
-            Positioned(
-              left: 0,
-              right: 0,
-              bottom: 12,
-              child: Center(
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: AppColors.neutral200),
-                      boxShadow: const [AppColors.cardShadow]),
-                  child: Text('B 1234 KLM • 70 km/jam • Menuju Bandung',
-                      style: Theme.of(context)
-                          .textTheme
-                          .labelSmall
-                          ?.copyWith(fontWeight: FontWeight.w600)),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _MapPin extends StatelessWidget {
+/// Pin marker peta (dipakai TripMapView untuk titik asal/tujuan).
+class MapPin extends StatelessWidget {
   final IconData icon;
   final String label;
   final Color color;
-  const _MapPin({required this.icon, required this.label, required this.color});
+  const MapPin(
+      {required this.icon, required this.label, required this.color});
   @override
   Widget build(BuildContext context) {
     return ExcludeSemantics(
@@ -692,33 +608,21 @@ class _MapPin extends StatelessWidget {
                 border: Border.all(color: Colors.white, width: 2)),
             child: Icon(icon, color: Colors.white, size: 18),
           ),
-          Text(label,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall
-                  ?.copyWith(fontWeight: FontWeight.w600)),
+          // Satu baris selalu (pola yang sama dengan label bottom-nav):
+          // susut hanya saat terdesak dalam box marker 60px.
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(label,
+                style: Theme.of(context)
+                    .textTheme
+                    .labelSmall
+                    ?.copyWith(fontWeight: FontWeight.w600),
+                maxLines: 1),
+          ),
         ],
       ),
     );
   }
-}
-
-class _RoutePainter extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = AppColors.info
-      ..strokeWidth = 3
-      ..style = PaintingStyle.stroke;
-    final path = Path()
-      ..moveTo(size.width * 0.15, size.height * 0.35)
-      ..cubicTo(size.width * 0.35, size.height * 0.2, size.width * 0.45,
-          size.height * 0.7, size.width * 0.8, size.height * 0.6);
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
 /// Kartu ringkas tugas terdekat (section Beranda). Seluruh kartu satu area
@@ -732,7 +636,7 @@ class TugasBerikutnyaCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     // Jujur: umumkan tombol hanya bila benar bisa diketuk.
-    // (InkWell onTap:null otomatis tanpa ripple — render statis.)
+    // (InkWell onTap:null otomatis tanpa ripple → render statis.)
     return Semantics(
       button: onTap != null,
       label: 'Tugas berikutnya: ${trip.rute}, ${trip.tanggal}',
